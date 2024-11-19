@@ -8,6 +8,7 @@ import (
 	"github.com/nitish-chandra-m/receipt-processor-challenge/internal/models"
 )
 
+// ServiceConfig holds the configuration settings for the service
 type ServiceConfig struct {
 	Host              string
 	Port              string
@@ -19,7 +20,8 @@ type ServiceConfig struct {
 	DB                *models.InMemoryStore
 }
 
-func NewServiceConfig() (*ServiceConfig, error) {
+// LoadServiceConfig loads and returns the service configuration with default values
+func LoadServiceConfig() (*ServiceConfig, error) {
 	return &ServiceConfig{
 		Host:              os.Getenv("HOST"),
 		Port:              os.Getenv("PORT"),
@@ -27,7 +29,7 @@ func NewServiceConfig() (*ServiceConfig, error) {
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 5 * time.Second,
 		WriteTimeout:      5 * time.Second,
-		Router:            mux.NewRouter(),
-		DB:                models.NewInMemoryStore(),
+		Router:            mux.NewRouter(),           // Initialize new router
+		DB:                models.NewInMemoryStore(), // Initialize in-memory store
 	}, nil
 }

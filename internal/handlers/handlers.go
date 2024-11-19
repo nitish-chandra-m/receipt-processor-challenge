@@ -41,6 +41,7 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
+// Handler function for the ProcessReceipts endpoint
 func (h *Handlers) ProcessReceipts(w http.ResponseWriter, r *http.Request) {
 	var receipt ProcessReceiptsRequest
 	err := json.NewDecoder(r.Body).Decode(&receipt)
@@ -56,6 +57,7 @@ func (h *Handlers) ProcessReceipts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Spawn a goroutine to calculate points without blocking
 	go rec.CalculatePoints()
 
 	resp := ProcessReceiptsResponse{
@@ -68,6 +70,7 @@ func (h *Handlers) ProcessReceipts(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Handler function for the GetPoints endpoint
 func (h *Handlers) GetPoints(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := uuid.Parse(vars["id"])
@@ -89,6 +92,7 @@ func (h *Handlers) GetPoints(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// createReceipt creates a new receipt from the request body and stores it in the inmemory DB.
 func createReceipt(db *models.InMemoryStore, receipt *ProcessReceiptsRequest) (*models.Receipt, error) {
 	rec := &models.Receipt{}
 	rec.Id = uuid.New()
@@ -110,6 +114,7 @@ func createReceipt(db *models.InMemoryStore, receipt *ProcessReceiptsRequest) (*
 	return rec, err
 }
 
+// jsonError sends a JSON-encoded error response to the client.
 func jsonError(w http.ResponseWriter, errorString string, statusCode int) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
